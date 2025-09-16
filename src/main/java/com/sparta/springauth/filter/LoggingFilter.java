@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Slf4j(topic = "LoggingFilter")  // 로그를 남길 때 구분하기 위해서 topic 설정
-@Component
+//@Component
 @Order(1)  // Filter 가 여러 개일 때, 순서 지정 (낮은 숫자가 먼저 실행됨)
 public class LoggingFilter implements Filter {
     @Override
