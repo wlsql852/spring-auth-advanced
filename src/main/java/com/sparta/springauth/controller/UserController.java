@@ -1,15 +1,20 @@
 package com.sparta.springauth.controller;
 
-import com.sparta.springauth.dto.LoginRequestDto;
 import com.sparta.springauth.dto.SignupRequestDto;
 import com.sparta.springauth.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
+@Slf4j
 @Controller
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -26,11 +31,24 @@ public class UserController {
         return "signup";
     }
 
-    @PostMapping("/user/signup" )
-    public String signup(SignupRequestDto requestDto) {
-        // 회원가입 로직 처리 (예: 서비스 호출)
+    @PostMapping("/user/signup")
+    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+        // Validation 예외처리
+        // validation에러들을 list에 담음
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        //1개 이상시 에러 로그 출력
+        if(fieldErrors.size() > 0) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+            }
+            //회원가입 페이지로 되돌아감
+            return "redirect:/api/user/signup";
+        }
+
         userService.signup(requestDto);
-        return "redirect:/api/user/login-page"; // 회원가입 후 로그인 페이지로 리다이렉트
+
+        //회원가입 완료후 로그인 페이지 이동
+        return "redirect:/api/user/login-page";
     }
 
 }
