@@ -33,15 +33,4 @@ public class UserController {
         return "redirect:/api/user/login-page"; // 회원가입 후 로그인 페이지로 리다이렉트
     }
 
-    @PostMapping("/user/login" )
-    public String login(LoginRequestDto requestDto, HttpServletResponse res) {
-        try {
-            // 로그인 로직 처리 (예: 서비스 호출)
-            userService.login(requestDto, res);
-        } catch (Exception e) {
-            return "redirect:/api/user/login-page?error"; // 로그인 실패 시 다시 로그인 페이지로 리다이렉트  //오류날시 표시하자고 클라이언트와 약속
-        }
-
-        return "redirect:/"; // 로그인 후 메인 페이지로 리다이렉트
-    }
 }
